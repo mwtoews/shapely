@@ -1,0 +1,44 @@
+{
+    "creators": [
+        {
+            "name": "Gillies, Sean",
+            "orcid": "0000-0002-8401-9184"
+        },
+        {
+            "affiliation": "Nelen & Schuurmans",
+            "name": "van der Wel, Casper",
+            "orcid": "0000-0002-5068-0476"
+        },
+        {
+            "name": "Van den Bossche, Joris",
+            "orcid": "0000-0003-3284-2977"
+        },
+        {
+            "affiliation": "GNS Science",
+            "name": "Taves, Mike",
+            "orcid": "0000-0003-3657-7963"
+        },
+        {
+            "name": "Arnott, Joshua"
+        },
+        {
+            "name": "Tonnhofer, Oliver"
+        },
+        {
+            "affiliation": "Astute Spruce, LLC",
+            "name": "Ward, Brendan",
+            "orcid": "0000-0002-0813-9774"
+        }
+    ],
+    "description": "Shapely is a Python package for manipulation and analysis of planar geometric objects.",
+    "keywords": [
+        "GEOS",
+        "geometry",
+        "coordinates",
+        "cartography"
+    ],
+    "license": {
+        "id": "BSD-3-Clause"
+    },
+    "title": "Shapely"
+}
