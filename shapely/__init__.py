@@ -25,4 +25,4 @@ from shapely.geometry import (  # NOQA
     LinearRing,
 )
 
-from ._version import __version__  # NOQA
+from ._version import version as __version__  # NOQA
