@@ -2,8 +2,8 @@
 requires = [
     "cython",
     "oldest-supported-numpy",
-    "setuptools",
-    "wheel",
+    "setuptools>=45",
+    "setuptools_scm[toml]>=6.2",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -55,6 +55,9 @@ include = [
     "shapely",
     "shapely.*",
 ]
+
+[tool.setuptools_scm]
+write_to = "shapely/_version.py"
 
 [tool.coverage.run]
 source = ["shapely"]
