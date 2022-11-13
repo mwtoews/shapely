@@ -1,3 +1,4 @@
+from ._version import __version__
 from .lib import GEOSException  # NOQA
 from .lib import Geometry  # NOQA
 from .lib import geos_version, geos_version_string  # NOQA
@@ -25,10 +26,5 @@ from shapely.geometry import (  # NOQA
     GeometryCollection,
     LinearRing,
 )
-
-from ._version import get_versions
-
-__version__ = get_versions()["version"]
-del get_versions
 
 setup_signal_checks()
