@@ -7,9 +7,10 @@ requires = [
     # continue using oldest-support-numpy.
     "oldest-supported-numpy; python_version<'3.9'",
     "numpy>=1.25; python_version>='3.9'",
-    "setuptools>=61.0.0",
+    "meson-python",
+    "versioneer[toml]"
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "mesonpy"
 
 [project]
 name = "shapely"
@@ -70,6 +71,14 @@ include = ["shapely", "shapely.*"]
 
 [tool.setuptools.package-data]
 "shapely" = ["*.pxd"]
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "shapely/_version.py"
+versionfile_build = "shapely/_version.py"
+tag_prefix = ""
+parentdir_prefix = "shapely-"
 
 [tool.coverage.run]
 source = ["shapely"]
