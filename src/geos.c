@@ -1046,22 +1046,21 @@ char fill_coord_seq_skip_nan(GEOSContextHandle_t ctx, GEOSCoordSequence* coord_s
 
 /* Create a GEOSCoordSequence from an array
  *
- * Note: this function assumes that the dimension of the buffer is already
- * checked before calling this function, so the buffer and the dims argument
- * is only 2D or 3D.
- *
  * handle_nan: 0 means 'allow', 1 means 'skip', 2 means 'error'
  *
  * Returns an error state (PGERR_SUCCESS / PGERR_GEOS_EXCEPTION / PGERR_NAN_COORD).
  */
 enum ShapelyErrorCode coordseq_from_buffer(GEOSContextHandle_t ctx, const double* buf,
-                                           unsigned int size, unsigned int dims,
+                                           unsigned int size, char has_z, char has_m,
                                            char is_ring, int handle_nan, npy_intp cs1,
                                            npy_intp cs2, GEOSCoordSequence** coord_seq) {
   unsigned int first_i, last_i, actual_size;
   double coord;
   char errstate;
   char ring_closure = 0;
+  unsigned int dims = 2;
+  if (has_z) dims += 1;
+  if (has_m) dims += 1;
 
   switch (handle_nan) {
     case SHAPELY_HANDLE_NAN_ALLOW:
@@ -1103,16 +1102,16 @@ enum ShapelyErrorCode coordseq_from_buffer(GEOSContextHandle_t ctx, const double
     char* cp1 = (char*)buf + cs1 * first_i;
     if ((cs1 == dims * 8) && (cs2 == 8)) {
       /* C-contiguous memory */
-      int hasZ = dims == 3;
-      *coord_seq = GEOSCoordSeq_copyFromBuffer_r(ctx, (double*)cp1, actual_size, hasZ, 0);
+      *coord_seq = GEOSCoordSeq_copyFromBuffer_r(ctx, (double*)cp1, actual_size, (int)has_z, (int)has_m);
       return (*coord_seq != NULL) ? PGERR_SUCCESS : PGERR_GEOS_EXCEPTION;
     } else if ((cs1 == 8) && (cs2 == size * 8)) {
       /* F-contiguous memory (note: this for the subset, so we don't necessarily
       end up here if the full array is F-contiguous) */
       const double* x = (double*)cp1;
       const double* y = (double*)(cp1 + cs2);
-      const double* z = (dims == 3) ? (double*)(cp1 + 2 * cs2) : NULL;
-      *coord_seq = GEOSCoordSeq_copyFromArrays_r(ctx, x, y, z, NULL, actual_size);
+      const double* z = has_z ? (double*)(cp1 + 2 * cs2) : NULL;
+      const double* m = has_m ? (double*)(cp1 + 4 * cs2) : NULL;
+      *coord_seq = GEOSCoordSeq_copyFromArrays_r(ctx, x, y, z, m, actual_size);
       return (*coord_seq != NULL) ? PGERR_SUCCESS : PGERR_GEOS_EXCEPTION;
     }
   }

@@ -202,7 +202,7 @@ enum ShapelyHandleNan { SHAPELY_HANDLE_NAN_ALLOW, SHAPELY_HANDLE_NAN_SKIP, SHAPE
 
 extern enum ShapelyErrorCode coordseq_from_buffer(GEOSContextHandle_t ctx,
                                                   const double* buf, unsigned int size,
-                                                  unsigned int dims, char is_ring,
+                                                  char has_z, char has_m, char is_ring,
                                                   int handle_nan, npy_intp cs1,
                                                   npy_intp cs2,
                                 GEOSCoordSequence** coord_seq);
