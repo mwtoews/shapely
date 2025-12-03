@@ -55,18 +55,8 @@ On macOS::
     $ pip install shapely --no-binary shapely
 
 If you've installed GEOS to a standard location on Linux or macOS, the
-installation will automatically find it using ``geos-config``. See the notes
+installation will automatically find it using CMake. See the notes
 below on GEOS discovery at compile time to configure this.
-
-We do not have a recipe for Windows platforms. The following steps should
-enable you to build Shapely yourself:
-
-- Get a C compiler applicable to your Python version (https://wiki.python.org/moin/WindowsCompilers)
-- Download and install a GEOS binary (https://trac.osgeo.org/osgeo4w/)
-- Set GEOS_INCLUDE_PATH and GEOS_LIBRARY_PATH environment variables (see below
-  for notes on GEOS discovery)
-- Run ``pip install shapely --no-binary``
-- Make sure the GEOS .dll files are available on the PATH
 
 
 Installation for local development
@@ -111,7 +101,21 @@ Shapely can be tested using ``pytest``::
 GEOS discovery (compile time)
 -----------------------------
 
-If GEOS is installed on Linux or macOS, the ``geos-config`` command line
+GEOS is a core dependency built and installed with CMake. For example:
+
+    $ git clone git@github.com:libgeos/geos.git --depth 1
+    $ cd geos
+    $ cmake -GNinja -S . -B _build -DCMAKE_INSTALL_PREFIX=/tmp/inst
+    $ cmake --build _build
+    $ cmake --install _build
+
+If it is installed to a custom path, then it can be automatically discovered
+with one of two methods.
+
+    $ python -m pip install -e . --setup-args="-Dcmake_prefix_path=/tmp/inst"
+
+If GEOS is installed with CMake,
+the ``geos-config`` command line
 utility should be available and ``pip`` will find GEOS automatically.
 If the correct ``geos-config`` is not on the PATH, you can add it as follows
 (on Linux/macOS)::
@@ -135,6 +139,14 @@ Common locations of GEOS (to be suffixed by ``lib``, ``include`` or ``bin``):
 * Anaconda (Linux/macOS): ``$CONDA_PREFIX/Library``
 * Anaconda (Windows): ``%CONDA_PREFIX%\Library``
 * OSGeo4W (Windows): ``C:\OSGeo4W64``
+
+
+export GEOS_PREFIX=/home/mtoews/src/GEOS/builds/geos-3.10.3
+python -m build -Csetup-args="-Dgeos-config=$GEOS_PREFIX/bin/geos-config"
+
+python -m build -Csetup-args=
+"-Dgeos-library-file=$GEOS_PREFIX/lib/libgeos_c.so"
+-Csetup-args="-Dgeos-include-dir=$GEOS_PREFIX/include"
 
 
 GEOS discovery (runtime)

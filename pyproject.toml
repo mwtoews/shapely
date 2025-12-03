@@ -5,9 +5,9 @@ requires = [
     # as oldest-support-numpy was (customizable with a NPY_TARGET_VERSION
     # define).
     "numpy>=1.25,<3",
-    "setuptools>=61.0.0",
+    "meson-python>=0.13.1",
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "mesonpy"
 
 [project]
 name = "shapely"
@@ -21,12 +21,11 @@ maintainers = [
 description = "Manipulation and analysis of geometric objects"
 readme = "README.rst"
 keywords = ["geometry", "topology", "gis"]
-license = {text = "BSD 3-Clause"}
+license = "BSD-3-Clause"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: Unix",
     "Operating System :: MacOS",
     "Operating System :: Microsoft :: Windows",
@@ -60,21 +59,18 @@ docs = [
 Documentation = "https://shapely.readthedocs.io/"
 Repository = "https://github.com/shapely/shapely"
 
-[tool.setuptools]
-include-package-data = false
-
-[tool.setuptools.packages.find]
-include = ["shapely", "shapely.*"]
-
-[tool.setuptools.package-data]
-"shapely" = ["*.pxd"]
-
 [tool.cibuildwheel]
 skip = ["pp*", "*_i686", "*_ppc64le", "*_s390x"]
 build-verbosity = 1
+before-build = "pip install numpy cython meson-python wheel ninja"
+build-frontend = { name = "pip", args = ["--no-build-isolation"] }
 test-requires = "pytest"
 test-command = "pytest --pyargs shapely.tests"
 enable = ["cpython-freethreading"]
+
+[tool.cibuildwheel.windows]
+before-build = "pip install numpy cython meson-python wheel delvewheel"
+config-settings = { setup-args = ["--vsenv"] }
 
 [tool.coverage.run]
 source = ["shapely"]
@@ -85,6 +81,10 @@ include = ["docs"]
 ignore = ["D000", "D004"]
 allow-long-titles = true
 max-line-length = 79
+
+#[tool.meson-python.args]
+#dist = ["-Dgeos-required=disabled"]
+#setup = ["--vsenv"]  # only applied to MSVC
 
 [tool.ruff]
 line-length = 88
