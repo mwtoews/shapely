@@ -54,6 +54,19 @@ On macOS::
     $ brew install geos  # skip this if you already have GEOS
     $ pip install shapely --no-binary shapely
 
+On Windows::
+
+    cd c:\dev
+    git clone https://github.com/Microsoft/vcpkg.git
+    cd vcpkg
+    .\bootstrap-vcpkg.bat
+    vcpkg install geos --triplet=x64-windows
+    set GEOS_INSTALL=D:\dev\vcpkg\packages\geos_x64-windows
+
+uv pip install --verbose --no-build-isolation -Csetup-args="-Dpython.install_env=auto" -Csetup-args="-Dcmake_prefix_path=%GEOS_INSTALL%"  -Ccompile-args="--verbose" -Ceditable-verbose=true  --editable .
+python -c "import os; os.add_dll_directory(r'%GEOS_INSTALL%\bin'); import shapely; print(shapely.geos_version_string)"
+
+
 If you've installed GEOS to a standard location on Linux or macOS, the
 installation will automatically find it using CMake. See the notes
 below on GEOS discovery at compile time to configure this.

@@ -43,10 +43,10 @@ elif get_option('cmake_prefix_path') != []
 else  # default
   geos_dep_method = 'auto'
 endif
-
+message('it is', get_option('pkg_config_path'))
 geos_dep = dependency('geos', version : '>=3.10',
-  required : false,  # e.g. sdist build does not require geos
-  method : geos_dep_method)
+  required : true,  # e.g. sdist build does not require geos
+  method : geos_dep_method,  modules : ['GEOS::geos_c'])
 
 cy = meson.get_compiler('cython')
 
